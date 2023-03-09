@@ -1,0 +1,26 @@
+Survey.StylesManager.applyTheme("defaultV2");
+
+var surveyJSON = {"title":"Kit Digital La Clave Gráfica","description":"Cuéntanos un poco de ti para conocerte mejor y saber qué necesitas","logoPosition":"right","completedHtml":"<h3>Gracias por completar el cuestionario</h3>","loadingHtml":"<h3>Cargando cuestionario...</h3>","pages":[{"name":"1 - Háblanos de tu empresa","elements":[{"type":"html","name":"disclaimer","html":"<p style=\"font-size:12px;\">Las preguntas marcadas con <span style=\"color:red;\">*</span> son obligatorias</p>"},{"type":"text","name":"Nombre-empresa","title":"¿Cuál es el nombre de la empresa?","isRequired":true,"requiredErrorText":"Campo requerido"},{"type":"radiogroup","name":"tiene-dominio","title":"¿Ya tienes un nombre de dominio registrado? (ej: miempresa.es) ?","isRequired":true,"requiredErrorText":"Campo requerido","choices":["Sí","No"]},{"type":"text","name":"dominio-registrado","visibleIf":"{tiene-dominio} = 'Sí'","title":"¿Cuál es el nombre de dominio?","isRequired":true,"requiredErrorText":"Campo requerido","inputType":"url"},{"type":"text","name":"dominio-a-registrar","visibleIf":"{tiene-dominio} = 'No'","title":"¿Alguna idea del que te gustaría registrar?","description":"Recomendamos coger tanto \".com\", como el \".es\"","requiredErrorText":"Campo requerido","inputType":"url"}],"title":"1 - Háblanos de tu empresa"},{"name":"2 - En cuanto al apartado gráfico...","elements":[{"type":"html","name":"question1","html":"<p style=\"font-size:12px;\">Las preguntas marcadas con <span style=\"color:red;\">*</span> son obligatorias</p>"},{"type":"radiogroup","name":"tiene-logotipo","title":"¿Ya tienes un logotipo?","isRequired":true,"requiredErrorText":"Campo requerido","choices":["Sí","No"]},{"type":"file","name":"subida-logo","visibleIf":"{tiene-logotipo} = 'Sí'","title":"Déjanos verlo subiendo una imagen","requiredErrorText":"Campo requerido","acceptedTypes":".png, .jpg, .jpeg","waitForUpload":true,"needConfirmRemoveFile":true}],"title":"2 - En cuanto al apartado gráfico..."},{"name":"3 - ¿Qué quieres conseguir con tu web?","elements":[{"type":"html","name":"question2","html":"<p style=\"font-size:12px;\">Las preguntas marcadas con <span style=\"color:red;\">*</span> son obligatorias</p>"},{"type":"dropdown","name":"objetivo-sitio-web","title":"¿Cuál es tu objetivo con este sitio web? ","isRequired":true,"requiredErrorText":"Campo requerido","choices":["Visibilidad","Venta on-line","Captación de contactos","Descarga de archivos"],"placeholder":"Selecciona..."},{"type":"comment","name":"servicios-productos","title":"¿Cuáles son los servicios/productos que ofreces en tu negocio? ","isRequired":true,"requiredErrorText":"Campo requerido"},{"type":"comment","name":"producto-estrella","title":"¿Cuál es tu servicio/producto estrella?","requiredErrorText":"Campo requerido"},{"type":"comment","name":"web-referencia","title":"Páginas web de referencia","description":"¿Tienes alguna web que te llame la atención?","requiredErrorText":"Campo requerido"},{"type":"dropdown","name":"imagenes-web","title":"Imágenes de la página web ","isRequired":true,"requiredErrorText":"Campo requerido","choices":["Yo os suministro todos los elementos gráficos.","Necesitamos imágenes de stock y tal vez fotografía profesional.","No estoy seguro en este momento, prefiero aclararlo con vosotros."],"placeholder":"Selecciona..."}],"title":"3 - ¿Qué quieres conseguir con tu web?"},{"name":"4 - Para terminar","elements":[{"type":"html","name":"question3","html":"<p style=\"font-size:12px;\">Las preguntas marcadas con <span style=\"color:red;\">*</span> son obligatorias</p>"},{"type":"checkbox","name":"servicio-extra","title":"¿Te gustaría considerar cualquiera de los otros servicios a continuación?","requiredErrorText":"Campo requerido","choices":["SEO","Redes sociales","Newsletter","Mantenimiento"],"selectAllText":"Sele"},{"type":"text","name":"correo-electrónico","title":"Danos un correo para estar en contacto","isRequired":true,"requiredErrorText":"Campo requerido","inputType":"email"},{"type":"comment","name":"info-adicional","title":"Información adicional","description":"Algo más que nos quieras contar","requiredErrorText":"Campo requerido"}],"title":"4 - Para terminar"}],"sendResultOnPageNext":true,"showProgressBar":"top","progressBarType":"buttons","startSurveyText":"Empezar","pagePrevText":"Volver","pageNextText":"Siguiente","completeText":"Terminar y enviar","previewText":"Preview","editText":"Editar"};
+
+function sendDataToServer(survey) {
+   //alert("The results are: " + JSON.stringify(survey.data));
+   console.log(survey.data);
+   /*var xmlhttp = new XMLHttpRequest();
+   xmlhttp.onreadystatechange = function() {
+     if (this.readyState == 4 && this.status == 200) {
+       console.log("Todo correcto");
+     }
+   };
+   xmlhttp.open("POST", "enviar.php?q=" + JSON.stringify(survey.data), true);
+   xmlhttp.send();*/
+   var xmlhttp = new XMLHttpRequest();
+xmlhttp.open("POST", "enviar.php", true);
+xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+xmlhttp.send("q=" + JSON.stringify(survey.data));
+}
+
+var survey = new Survey.Model(surveyJSON);
+$("#surveyContainer").Survey({
+    model: survey,
+    onComplete: sendDataToServer
+});
